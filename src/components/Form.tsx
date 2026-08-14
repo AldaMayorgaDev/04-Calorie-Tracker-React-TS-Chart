@@ -1,7 +1,7 @@
 import {useState} from "react";
-import type {ChangeEvent} from "react";
+import type {ChangeEvent, SubmitEvent} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faFloppyDisk} from "@fortawesome/free-solid-svg-icons";
+import {faPersonRunning, faUtensils} from "@fortawesome/free-solid-svg-icons";
 import {categories} from "../data/categories";
 import type {ActivityT} from "../types";
 
@@ -23,8 +23,27 @@ const Form = () => {
       [e.target.id]: isNumberField ? +e.target.value : e.target.value,
     });
   };
+
+  const isValidActivity = (): boolean => {
+    const {name, calories} = activity;
+
+    return name.trim() !== "" && calories > 0;
+  };
+
+  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("hubo un submit", e);
+    setActivity({
+      category: 1,
+      name: "",
+      calories: 0,
+    });
+  };
   return (
-    <form className="space-y-5 bg-white rounded-lg shadow p-10">
+    <form
+      className="space-y-5 bg-white rounded-lg shadow p-10"
+      onSubmit={(e) => handleSubmit(e)}
+    >
       <div className="grid grid-cols-1 gap-3">
         <label htmlFor="category" className="font-semibold">
           Categoría:
@@ -80,10 +99,20 @@ const Form = () => {
 
       <button
         type="submit"
-        className="bg-gray-800 hover:bg-gray-900 w-full rounded-lg p-2 font-bold uppercase text-slate-100 hover:cursor-pointer space-x-2"
+        className="bg-gray-800 hover:bg-gray-900 w-full rounded-lg p-2 font-bold uppercase text-slate-100 hover:cursor-pointer space-x-2 disabled:opacity-10"
+        disabled={!isValidActivity()}
       >
-        <FontAwesomeIcon icon={faFloppyDisk} />
-        <span>Guardar</span>
+        {activity.category === 1 ? (
+          <>
+            <FontAwesomeIcon icon={faUtensils} />
+            <span> Guardar Comida </span>
+          </>
+        ) : (
+          <>
+            <FontAwesomeIcon icon={faPersonRunning} />
+            <span>Guardar Ejercicio </span>
+          </>
+        )}
       </button>
     </form>
   );
