@@ -1,17 +1,24 @@
 import {useState} from "react";
-import type {ChangeEvent, SubmitEvent} from "react";
+import type {ChangeEvent, Dispatch, SubmitEvent} from "react";
+import {v4 as uuidv4} from "uuid";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPersonRunning, faUtensils} from "@fortawesome/free-solid-svg-icons";
 import {categories} from "../data/categories";
 import type {ActivityT} from "../types";
+import type {ActivityActions} from "../reducers/activity-reducer";
 
-const Form = () => {
+type FormPropsT = {
+  dispatch: Dispatch<ActivityActions>;
+};
+const initialState: ActivityT = {
+  id: uuidv4(),
+  category: 1,
+  name: "",
+  calories: 0,
+};
+const Form = ({dispatch}: FormPropsT) => {
   /* Hooks */
-  const [activity, setActivity] = useState<ActivityT>({
-    category: 1,
-    name: "",
-    calories: 0,
-  });
+  const [activity, setActivity] = useState<ActivityT>(initialState);
 
   const handleChange = (
     e: ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLInputElement>,
@@ -33,11 +40,15 @@ const Form = () => {
   const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("hubo un submit", e);
-    setActivity({
-      category: 1,
-      name: "",
-      calories: 0,
+
+    dispatch({
+      type: "save-activity",
+      payload: {
+        newActivity: activity,
+      },
     });
+
+    setActivity({...initialState, id: uuidv4()});
   };
   return (
     <form
