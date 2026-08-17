@@ -58,8 +58,6 @@ const Form = ({dispatch, state}: FormPropsT) => {
 
   const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("hubo un submit", e);
-
     dispatch({
       type: "save-activity",
       payload: {

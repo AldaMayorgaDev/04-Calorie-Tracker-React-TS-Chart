@@ -34,7 +34,7 @@ const ActivityList = ({activites, dispatch}: ActivityListPropsT) => {
           return (
             <div
               key={activity.id}
-              className="px-5 py-10 bg-white mt-5 flex justify-between rounded-2xl"
+              className="px-5 py-10 bg-white mt-5 flex justify-between rounded-2xl shadow"
             >
               <div className="space-y-2 relative">
                 <p

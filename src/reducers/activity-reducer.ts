@@ -18,6 +18,9 @@ export type ActivityActions =
       payload: {
         id: ActivityT["id"];
       };
+    }
+  | {
+      type: "restart-app";
     };
 
 export type ActivityStateT = {
@@ -66,8 +69,6 @@ export const activityReducer = (
   }
 
   if (action.type === "set-activeId") {
-    console.log("Actived ID actions", action.payload.id);
-
     return {
       ...state,
       activeId: action.payload.id,
@@ -80,6 +81,13 @@ export const activityReducer = (
       activities: state.activities.filter(
         (activity) => activity.id !== action.payload.id,
       ),
+    };
+  }
+
+  if (action.type === "restart-app") {
+    return {
+      activities: [],
+      activeId: "",
     };
   }
   return state;
