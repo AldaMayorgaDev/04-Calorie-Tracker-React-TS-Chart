@@ -1,14 +1,18 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import type {ChangeEvent, Dispatch, SubmitEvent} from "react";
 import {v4 as uuidv4} from "uuid";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPersonRunning, faUtensils} from "@fortawesome/free-solid-svg-icons";
 import {categories} from "../data/categories";
 import type {ActivityT} from "../types";
-import type {ActivityActions} from "../reducers/activity-reducer";
+import type {
+  ActivityActions,
+  ActivityStateT,
+} from "../reducers/activity-reducer";
 
 type FormPropsT = {
   dispatch: Dispatch<ActivityActions>;
+  state: ActivityStateT;
 };
 const initialState: ActivityT = {
   id: uuidv4(),
@@ -16,9 +20,24 @@ const initialState: ActivityT = {
   name: "",
   calories: 0,
 };
-const Form = ({dispatch}: FormPropsT) => {
+const Form = ({dispatch, state}: FormPropsT) => {
   /* Hooks */
   const [activity, setActivity] = useState<ActivityT>(initialState);
+
+  /* UseEffect se ejecuta siempre que hay un activeId, es decir que se selecicona para editar
+  Si tenemos un id en el state-activeId, filtra trodo el arreglo de activites y nos devuelve el elemento con el mismo id de activeID
+  Se coloca [0] porque el filter regresa un arreglo y queremos solo el primer elemento
+  s Se setean los valores setActivity para que aparezcan en el formulario
+   */
+  useEffect(() => {
+    if (state.activeId) {
+      const selectedActivity = state.activities.filter(
+        (stateActivity) => stateActivity.id === state.activeId,
+      )[0];
+      // eslint-disable-next-line
+      setActivity(selectedActivity);
+    }
+  }, [state.activeId]);
 
   const handleChange = (
     e: ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLInputElement>,

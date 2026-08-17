@@ -1,13 +1,16 @@
 import {useMemo} from "react";
+import type {ActionDispatch} from "react";
 
-import {PencilSquareIcon} from "@heroicons/react/24/outline";
+import {PencilSquareIcon, TrashIcon} from "@heroicons/react/24/outline";
 import type {ActivityT} from "../types";
 import {categories} from "../data/categories";
+import type {ActivityActions} from "../reducers/activity-reducer";
 
 type ActivityListPropsT = {
   activites: ActivityT[];
+  dispatch: ActionDispatch<[ActivityActions]>;
 };
-const ActivityList = ({activites}: ActivityListPropsT) => {
+const ActivityList = ({activites, dispatch}: ActivityListPropsT) => {
   const categoryName = useMemo(
     () => (category: ActivityT["category"]) =>
       categories.map((cat) => {
@@ -15,13 +18,17 @@ const ActivityList = ({activites}: ActivityListPropsT) => {
       }),
     [activites],
   );
+
+  const isEmpty = useMemo(() => activites.length === 0, [activites]);
   return (
     <>
       <h2 className="text-4xl font-bold text-slate-600 text-center">
         Comida y Actividades
       </h2>
-      {activites.length === 0 ? (
-        <p>Sin actividades</p>
+      {isEmpty ? (
+        <p className="mt-8 text-2xl text-slate-400 text-center capitalize">
+          Sin actividades
+        </p>
       ) : (
         activites.map((activity) => {
           return (
@@ -42,8 +49,28 @@ const ActivityList = ({activites}: ActivityListPropsT) => {
               </div>
 
               <div className="flex gap-5 items-center">
-                <button className="hover:cursor-pointer">
+                <button
+                  className="hover:cursor-pointer"
+                  onClick={() => {
+                    dispatch({
+                      type: "set-activeId",
+                      payload: {id: activity.id},
+                    });
+                  }}
+                >
                   <PencilSquareIcon className=" h-8 w-8 text-gray-800" />
+                </button>
+
+                <button
+                  className="hover:cursor-pointer"
+                  onClick={() => {
+                    dispatch({
+                      type: "delete-activity",
+                      payload: {id: activity.id},
+                    });
+                  }}
+                >
+                  <TrashIcon className=" h-8 w-8 text-red-800" />
                 </button>
               </div>
             </div>
