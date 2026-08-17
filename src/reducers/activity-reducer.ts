@@ -25,9 +25,14 @@ export type ActivityStateT = {
   activeId: ActivityT["id"];
 };
 
+/* Valida si existe algo en el localStorage si existe lo toma y lo convierte a un arreglo con el JSON.Parse y si no hay nada devulve un [] */
+const localStorageActivities = (): ActivityT[] => {
+  const activities = localStorage.getItem("activities");
+  return activities ? JSON.parse(activities) : [];
+};
 /* Estado inicial */
 export const initialState: ActivityStateT = {
-  activities: [],
+  activities: localStorageActivities(),
   activeId: "",
 };
 
