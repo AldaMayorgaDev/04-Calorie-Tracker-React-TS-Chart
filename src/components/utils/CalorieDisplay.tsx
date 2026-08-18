@@ -11,10 +11,10 @@ export const CalorieDisplay = ({
   const getColorByType = (type: string): string => {
     switch (type) {
       case "consumed":
-        return `yellow`;
+        return `lime`;
 
       case "burned":
-        return `red`;
+        return `orange`;
 
       default:
         return "while";
